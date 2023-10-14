@@ -104,59 +104,26 @@ def circle_on_line(x0, y0, x1, y1, cx, cy, r):
         return Point(lp.x + cos * c, lp.y + sin * c), Point(lp.x - cos * c, lp.y - sin * c), True
     return nil, nil, False
 
+def rect_on_rect(x0, y0, w0, h0, x1, y1, w1, h1):
+    return not (
+        x1 > x0 + w0 or
+        x1 + w1 < x0 or
+        y1 > y0 + h0 or
+        y1 + h1 < y0
+    )
 
-
-# // CircleToLine reports the points of intersection between a line and a circle.
-# func CircleToLine(x0, y0, x1, y1, cx, cy, r float64) (*Point, *Point, bool) {
-# 	p := NewPoint(cx, cy)
-# 	l := NewLine(x0, y0, x1, y1)
-# 	lp := l.ClosestPoint(p)
-# 	d := lp.Distance(p)
-
-# 	// circle/line intersection forms a chord
-# 	if d < r {
-# 		// height of chord
-# 		h := r - d
-# 		// half length of chord
-# 		c := math.Sqrt(r*r - math.Pow(r-h, 2))
-# 		angle := math.Atan2(y1-y0, x1-x0)
-# 		cos := math.Cos(angle)
-# 		sin := math.Sin(angle)
-# 		// two points on line c distance away from closest point.
-# 		return NewPoint(lp.X+cos*c, lp.Y+sin*c), NewPoint(lp.X-cos*c, lp.Y-sin*c), true
-# 	}
-# 	return nil, nil, false
-# }
-
-
-# // RectOnRect returns whether or not two rectangles intersect.
-# // TODO: return the rect of intersection.
-# func RectOnRect(x0, y0, w0, h0, x1, y1, w1, h1 float64) bool {
-# 	return !(x1 > x0+w0 ||
-# 		x1+w1 < x0 ||
-# 		y1 > y0+h0 ||
-# 		y1+h1 < y0)
-# }
-
-# // SegmentOnRect returns whether or not a segment intersects a rectangle.
-# // TODO: return the points of intersection.
-# func SegmentOnRect(x0, y0, x1, y1, rx, ry, rw, rh float64) bool {
-# 	_, _, hit := SegmentOnSegment(x0, y0, x1, y1, rx, ry, rx+rw, ry)
-# 	if hit {
-# 		return true
-# 	}
-# 	_, _, hit = SegmentOnSegment(x0, y0, x1, y1, rx+rw, ry, rx+rw, ry+rh)
-# 	if hit {
-# 		return true
-# 	}
-# 	_, _, hit = SegmentOnSegment(x0, y0, x1, y1, rx+rw, ry+rh, rx, ry+rh)
-# 	if hit {
-# 		return true
-# 	}
-# 	_, _, hit = SegmentOnSegment(x0, y0, x1, y1, rx, ry+rh, rx, ry)
-# 	if hit {
-# 		return true
-# 	}
-# 	return false
-# }
+def segment_on_rect(x0, y0, x1, y1, rx, ry, rw, rh):
+    x, y, hit = segment_on_segment(x0, y0, x1, y1, rx, ry, rx + rw, ry)
+    if hit:
+        return True
+    x, y, hit = segment_on_segment(x0, y0, x1, y1, rx + rw, ry, rx + rw, ry+rh)
+    if hit:
+        return True
+    x, y, hit = segment_on_segment(x0, y0, x1, y1, rx + rw, ry + rh, rx, ry + rh)
+    if hit:
+        return True
+    x, y, hit = segment_on_segment(x0, y0, x1, y1, rx, ry + rh, rx, ry)
+    if hit:
+        return True
+    return False
 

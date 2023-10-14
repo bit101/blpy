@@ -2,8 +2,6 @@ import math
 from .collision import *
 from .point import *
 
-
-
 class Circle:
     def __init__(self, x, y, radius):
         self.x = x

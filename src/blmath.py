@@ -69,3 +69,9 @@ def simplify(x, y):
     g = math.gcd(x, y)
     return x / g, y / g
 
+def mod_pos(a, b):
+    val = math.fmod(a, b)
+    if (val < 0 and b > 0) or (val > 0 and b < 0):
+        val += b
+    return val
+

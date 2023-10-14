@@ -1,4 +1,5 @@
 import cairo
+import color
 import geom
 import rand
 import math
@@ -52,10 +53,10 @@ class Context(cairo.Context):
         self.save()
         self.set_source_rgba(r, g, b, a)
         self.paint()
-        self.restor()
+        self.restore()
 
     def clear_color(self, color):
-        # todo
+        self.clear_rgba(color.r, color.g, color.b, color.a)
         pass
 
     def clear_white(self):
@@ -68,12 +69,10 @@ class Context(cairo.Context):
         self.clear_rgb(g, g, g)
 
     def clear_hsv(self, h, s, v):
-        # todo
-        pass
+        self.clear_color(color.hsv(h, s, v))
 
     def clear_hsva(self, h, s, v, a):
-        # todo
-        pass
+        self.clear_color(color.hsva(h, s, v, a))
 
     def clear_random_gray(self):
         g = rand.float()
@@ -90,7 +89,7 @@ class Context(cairo.Context):
     # Set
     ####################
     def set_source_color(self, color):
-        # todo
+        self.set_source_rgba(color.r, color.g, color.b, color.a)
         pass
 
     def set_source_black(self):
@@ -103,12 +102,10 @@ class Context(cairo.Context):
         self.set_source_rgb(g, g, g)
 
     def set_source_hsv(self, h, s, v):
-        # todo
-        pass
+        self.set_source_color(color.hsv(h, s, v))
 
     def set_source_hsva(self, h, s, v, a):
-        # todo
-        pass
+        self.set_source_color(color.hsva(h, s, v, a))
 
     def set_source_random_gray(self):
         g = rand.float()
@@ -751,8 +748,8 @@ class Context(cairo.Context):
     # triangle
     ##########
     def stroke_triangle_object(self, triangle):
-        self.stroke_path(triangle.points, true)
+        self.stroke_path(triangle.points(), True)
     
     def fill_triangle_object(self, triangle):
-        self.fill_path(triangle.points)
+        self.fill_path(triangle.points())
     

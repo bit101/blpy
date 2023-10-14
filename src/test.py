@@ -4,22 +4,26 @@ import math
 import blmath
 import geom
 import random
+import color
 
 
 surface = blpc.Surface(400, 400)
 context = blpc.Context(surface)
-context.clear_white()
 context.set_line_width (0.5)
 
-p = geom.random_point_in_rect(0, 0, 400, 400)
-context.point(p, 2)
-l = geom.Line(100, 100, 200, 200)
-context.stroke_line_object(l)
 
+p = color.Palette()
+for i in range(10):
+    p.add(color.random_rgb())
 
+p.sort()
 
-l2 = l.perpendicular(p)
-context.stroke_line_object(l2)
+for i in range(len(p.colors)):
+    c = p.colors[i]
+    print(c.luminance())
+    context.set_source_color(c)
+    context.fill_rectangle(i * 40, 0, 40, 400)
+
 
 
 

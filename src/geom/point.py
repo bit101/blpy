@@ -18,7 +18,7 @@ class Point:
     def coords(self):
         return self.x, self.y
 
-    def distance(p):
+    def distance(self, p):
         return math.hypot(self.x - p.x, self.y - p.y)
 
     def magnitude(self):

@@ -1,4 +1,4 @@
-
+from .collision import *
 
 class Segment:
     def __init__(self, x0, y0, x1, y1):
@@ -14,48 +14,30 @@ class Segment:
     def from_points(p0, p1):
         return Segment(p0.x, p0.y, p1.x, p1.y)
 
+    def hit_segment(self, other):
+        return segment_on_segment(self.x0, self.y0, self.x1, self.y1, other.x0, other.y0, other.x1, other.y1)
 
+    def hit_line(self, other):
+        return segment_on_line(self.x0, self.y0, self.x1, self.y1, other.x0, other.y0, other.x1, other.y1)
 
+    def hit_rect(self, other):
+        return segment_on_rect(self.x0, self.y0, self.x1, self.y1, other.x, other.y, other.w, other.h)
 
+    def length():
+        return math.hypot(self.x1 - self.x0, self.y1 - self.y0)
 
+    def closest_point(self, point):
+        v = Vector.between(self.x0, self.y0, point.x, point.y)
+        d = Vector.between(self.x0, self.y0, self.x1, self.y1).normalized()
+        vs = v.project(d)
+        if vs < 0:
+            return Point(self.x0, self.y0)
+        if vs > self.length():
+            return Point(self.x1, self.y1)
 
-# // HitSegment returns the point of intersection between this and another segment.
-# func (s *Segment) HitSegment(z *Segment) (float64, float64, bool) {
-# 	return SegmentOnSegment(s.X0, s.Y0, s.X1, s.Y1, z.X0, z.Y0, z.X1, z.Y1)
-# }
+        t = vs / self.length()
+        return Point(blmath.lerp(t, self.x0, self.x1), blmath.lerp(t, self.y0, self.y1))
 
-# // HitLine returns the point of intersection between this and another line.
-# func (s *Segment) HitLine(l *Line) (float64, float64, bool) {
-# 	return SegmentOnLine(s.X0, s.Y0, s.X1, s.Y1, l.X0, l.Y0, l.X1, l.Y1)
-# }
-
-# // HitRect returns whether this segment intersects a rectangle.
-# func (s *Segment) HitRect(r *Rect) bool {
-# 	return SegmentOnRect(s.X0, s.Y0, s.X1, s.Y1, r.X, r.Y, r.W, r.H)
-# }
-
-# // Length is the length of this segment.
-# func (s *Segment) Length() float64 {
-# 	return math.Hypot(s.X1-s.X0, s.Y1-s.Y0)
-# }
-
-# // ClosestPoint returns the point on this segment closest to another point.
-# func (s *Segment) ClosestPoint(p *Point) *Point {
-# 	v := VectorBetween(s.X0, s.Y0, p.X, p.Y)
-# 	d := VectorBetween(s.X0, s.Y0, s.X1, s.Y1).Normalized()
-# 	vs := v.Project(d)
-# 	if vs < 0 {
-# 		return NewPoint(s.X0, s.Y0)
-# 	}
-# 	if vs > s.Length() {
-# 		return NewPoint(s.X1, s.Y1)
-# 	}
-# 	t := vs / s.Length()
-# 	return NewPoint(blmath.Lerp(t, s.X0, s.X1), blmath.Lerp(t, s.Y0, s.Y1))
-# }
-
-# // DistanceTo returns the distance from this segment to another point.
-# func (s *Segment) DistanceTo(p *Point) float64 {
-# 	return s.ClosestPoint(p).Distance(p)
-# }
+    def distance_to(self, point):
+        return self.closest_point(point).distance(point)
 
