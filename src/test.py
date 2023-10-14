@@ -11,28 +11,15 @@ context = blpc.Context(surface)
 context.clear_white()
 context.set_line_width (0.5)
 
+p = geom.random_point_in_rect(0, 0, 400, 400)
+context.point(p, 2)
+l = geom.Line(100, 100, 200, 200)
+context.stroke_line_object(l)
 
 
 
-
-c0 = geom.Circle(200, 200, 100)
-
-context.stroke_circle_object(c0)
-
-p0 = geom.random_point_in_rect(0, 0, 400, 400)
-p1 = c0.tangent_point(p0, False)
-p2 = c0.tangent_point(p0, True)
-
-context.point(p0, 2)
-context.point(p1, 2)
-context.point(p2, 2)
-
-context.move_to(p1.x, p1.y)
-context.line_to(p0.x, p0.y)
-context.line_to(p2.x, p2.y)
-context.stroke()
-
-
+l2 = l.perpendicular(p)
+context.stroke_line_object(l2)
 
 
 

@@ -1,4 +1,6 @@
 import math
+import blmath
+from .vector import *
 
 def point_in_rect(x, y, rx, ry, rw, rh):
 	return x >= rx and x <= rx + rw and y >= ry and y <= ry + rh
@@ -11,60 +13,119 @@ def circle_on_circle(x0, y0, r0, x1, y1, r1):
     dist = math.hypot(x1 - x0, y1 - y0)
     return dist < (r0 + r1)
 
-# // CircleOnCircle returns whether or not two circles intersect.
-# // TODO: return the points of intersection.
-# func CircleOnCircle(x0, y0, r0, x1, y1, r1 float64) bool {
-# 	dist := math.Hypot(x1-x0, y1-y0)
-# 	return dist < (r0 + r1)
-# }
+def segment_on_line(x0, y0, x1, y1, x2, y2, x3, y3):
+    """
+    SegmentOnLine determines whether or not a segment intersects an infinite length line
+    and returns the point it intersects if it does.
+    x0, y0 -> x1, y1 = segment. x2, y2 -> x3, y3 = line
+    """
+    v0 = Vector.between(x0, y0, x1, y1)
+    v1 = Vector.between(x2, y2, x3, y3)
+    cross_prod = v0.cross_product(v1)
+    if math.isclose(cross_prod, 0):
+        # parallel
+        return 0, 0, false
 
-# // SegmentOnLine returns whether or not a segment intersects an infinite length line and returns the point it intersects if it does.
-# // x0, y0 -> x1, y1 = segment. x2, y2 -> x3, y3 = line
-# func SegmentOnLine(x0, y0, x1, y1, x2, y2, x3, y3 float64) (float64, float64, bool) {
-# 	v0 := VectorBetween(x0, y0, x1, y1)
-# 	v1 := VectorBetween(x2, y2, x3, y3)
-# 	crossProd := v0.CrossProduct(v1)
-# 	if blmath.Equalish(crossProd, 0, 1e-5) {
-# 		return 0, 0, false
-# 	}
-# 	delta := VectorBetween(x0, y0, x2, y2)
-# 	t1 := (delta.U*v1.V - delta.V * v1.U) / crossProd
+    delta = Vector.between(x0, y0, x2, y2)
+    t1 = (delta.u * v1.v - delta.v * v1.u) / cross_prod
 
-# 	if tIsValid(t1) {
-# 		return blmath.Lerp(t1, x0, x1), blmath.Lerp(t1, y0, y1), true
-# 	}
-# 	return 0, 0, false
-# }
+    if t1 >= 0 and t1 <= 1:
+        return blmath.lerp(t1, x0, x1), blmath.lerp(t1, y0, y1), True
+    return 0, 0, False
 
-# // SegmentOnSegment returns whether or not two line segments intersect and the point they intersect if they do.
-# func SegmentOnSegment(x0, y0, x1, y1, x2, y2, x3, y3 float64) (float64, float64, bool) {
-# 	v0 := VectorBetween(x0, y0, x1, y1)
-# 	v1 := VectorBetween(x2, y2, x3, y3)
-# 	crossProd := v0.CrossProduct(v1)
-# 	if blmath.Equalish(crossProd, 0, 1e-5) {
-# 		return 0, 0, false
-# 	}
-# 	delta := VectorBetween(x0, y0, x2, y2)
-# 	t1 := (delta.U*v1.V - delta.V*v1.U) / crossProd
-# 	t2 := (delta.U*v0.V - delta.V*v0.U) / crossProd
+def segment_on_segment(x0, y0, x1, y1, x2, y2, x3, y3):
+    """SegmentOnSegment returns whether or not two line segments intersect and the point they intersect if they do."""
+    v0 = Vector.between(x0, y0, x1, y1)
+    v1 = Vector.between(x2, y2, x3, y3)
+    cross_prod = v0.cross_product(v1)
+    if math.isclose(cross_prod, 0):
+        # parallel
+        return 0, 0, False
+    delta = Vector.between(x0, y0, x2, y2)
+    t1 = (delta.u * v1.v - delta.v * v1.u) / cross_prod
+    t2 = (delta.u * v0.v - delta.v * v0.u) / cross_prod
 
-# 	if tIsValid(t1) && tIsValid(t2) {
-# 		return blmath.Lerp(t1, x0, x1), blmath.Lerp(t1, y0, y1), true
-# 	}
-# 	return 0, 0, false
-# }
+    if t1 >= 0 and t1 <= 1 and t2 >= 0 and t2 <= 1:
+        return blmath.lerp(t1, x0, x1), blmath.lerp(t1, y0, y1), True
+    return 0, 0, False
 
-# // LineOnLine returns whether or not two infinite length lines intersect and the point they intersect if they do.
-# func LineOnLine(x0, y0, x1, y1, x2, y2, x3, y3 float64) (float64, float64, bool) {
-# 	v0 := VectorBetween(x0, y0, x1, y1)
-# 	v1 := VectorBetween(x2, y2, x3, y3)
-# 	crossProd := v0.CrossProduct(v1)
-# 	if blmath.Equalish(crossProd, 0, 1e-5) {
-# 		return 0, 0, false
+def line_on_line(x0, y0, x1, y1, x2, y2, x3, y3):
+    """LineOnLine returns whether or not two infinite length lines intersect and the point they intersect if they do."""
+    v0 = Vector.between(x0, y0, x1, y1)
+    v1 = Vector.between(x2, y2, x3, y3)
+    cross_prod = v0.cross_product(v1)
+    if math.isclose(cross_prod, 0):
+        # parallel
+        return 0, 0, False
+    delta = Vector.between(x0, y0, x2, y2)
+    t1 = (delta.u * v1.v - delta.v * v1.u) / cross_prod
+    return blmath.lerp(t1, x0, x1), blmath.lerp(t1, y0, y1), True
+
+def point_distance_to_segment(px, py, x0, y0, x1, y1):
+    # https://stackoverflow.com/questions/849211/shortest-distance-between-a-point-and-a-line-segment
+    a = px - x0
+    b = py - y0
+    c = x1 - x0
+    d = y1 - y0
+    dot = a * c + b * d
+    len_sq = c * c + d * d
+    # watching out for zero length line
+    param = -1.0 if len_sq == 0 else dot / len_sq
+    if param < 0:
+        xx = x0
+        yy = y0
+    elif param > 1:
+        xx = x1
+        yy = y1
+    else:
+        xx = x0 + param * c
+        yy = y0 + param * d
+    return math.hypot(px - xx, py - yy)
+
+def point_distance_to_line(px, py, x0, y0, x1, y1):
+    dx = x1 - x0
+    dy = y1 - y0
+    num = math.fabs(dx * (y0 - py) - dy * (x0 - px))
+    denom = math.sqrt(dx * dx + dy * dy)
+    return num / denom
+    
+def circle_on_line(x0, y0, x1, y1, cx, cy, r):
+    p = Point(cx, cy)
+    l = Line(x0, y0, x1, y1)
+    lp = l.closest_point(p)
+    d = lp.distance(p)
+
+    if d < r:
+        h = r - d
+        c = math.sqrt(r * r - math.pow(r - h, 2))
+        angle = math.atan2(y1 - y0, x1 - x0)
+        cos = math.cos(angle)
+        sin = math.sin(angle)
+        return Point(lp.x + cos * c, lp.y + sin * c), Point(lp.x - cos * c, lp.y - sin * c), True
+    return nil, nil, False
+
+
+
+# // CircleToLine reports the points of intersection between a line and a circle.
+# func CircleToLine(x0, y0, x1, y1, cx, cy, r float64) (*Point, *Point, bool) {
+# 	p := NewPoint(cx, cy)
+# 	l := NewLine(x0, y0, x1, y1)
+# 	lp := l.ClosestPoint(p)
+# 	d := lp.Distance(p)
+
+# 	// circle/line intersection forms a chord
+# 	if d < r {
+# 		// height of chord
+# 		h := r - d
+# 		// half length of chord
+# 		c := math.Sqrt(r*r - math.Pow(r-h, 2))
+# 		angle := math.Atan2(y1-y0, x1-x0)
+# 		cos := math.Cos(angle)
+# 		sin := math.Sin(angle)
+# 		// two points on line c distance away from closest point.
+# 		return NewPoint(lp.X+cos*c, lp.Y+sin*c), NewPoint(lp.X-cos*c, lp.Y-sin*c), true
 # 	}
-# 	delta := VectorBetween(x0, y0, x2, y2)
-# 	t1 := (delta.U*v1.V - delta.V*v1.U) / crossProd
-# 	return blmath.Lerp(t1, x0, x1), blmath.Lerp(t1, y0, y1), true
+# 	return nil, nil, false
 # }
 
 
@@ -97,67 +158,5 @@ def circle_on_circle(x0, y0, r0, x1, y1, r1):
 # 		return true
 # 	}
 # 	return false
-# }
-
-# // PointDistanceToSegment reports the distance from a point to a line segment
-# func PointDistanceToSegment(px, py, x0, y0, x1, y1 float64) float64 {
-# 	// https://stackoverflow.com/questions/849211/shortest-distance-between-a-point-and-a-line-segment
-# 	a := px - x0
-# 	b := py - y0
-# 	c := x1 - x0
-# 	d := y1 - y0
-
-# 	dot := a*c + b*d
-# 	lenSq := c*c + d*d
-# 	param := -1.0
-# 	if lenSq != 0 {
-# 		//in case of 0 length line
-# 		param = dot / lenSq
-# 	}
-
-# 	var xx, yy float64
-# 	if param < 0 {
-# 		xx = x0
-# 		yy = y0
-# 	} else if param > 1 {
-# 		xx = x1
-# 		yy = y1
-# 	} else {
-# 		xx = x0 + param*c
-# 		yy = y0 + param*d
-# 	}
-
-# 	return math.Hypot(px-xx, py-yy)
-# }
-
-# // PointDistanceToLine reports the distance from a point to a line.
-# func PointDistanceToLine(px, py, x0, y0, x1, y1 float64) float64 {
-# 	dx := x1 - x0
-# 	dy := y1 - y0
-# 	numerator := math.Abs(dx*(y0-py) - (x0-px)*dy)
-# 	denominator := math.Sqrt(dx*dx + dy*dy)
-# 	return numerator / denominator
-# }
-
-# // CircleToLine reports the points of intersection between a line and a circle.
-# func CircleToLine(x0, y0, x1, y1, cx, cy, r float64) (*Point, *Point, bool) {
-# 	p := NewPoint(cx, cy)
-# 	l := NewLine(x0, y0, x1, y1)
-# 	lp := l.ClosestPoint(p)
-# 	d := lp.Distance(p)
-
-# 	// circle/line intersection forms a chord
-# 	if d < r {
-# 		// height of chord
-# 		h := r - d
-# 		// half length of chord
-# 		c := math.Sqrt(r*r - math.Pow(r-h, 2))
-# 		angle := math.Atan2(y1-y0, x1-x0)
-# 		cos := math.Cos(angle)
-# 		sin := math.Sin(angle)
-# 		// two points on line c distance away from closest point.
-# 		return NewPoint(lp.X+cos*c, lp.Y+sin*c), NewPoint(lp.X-cos*c, lp.Y-sin*c), true
-# 	}
-# 	return nil, nil, false
 # }
 

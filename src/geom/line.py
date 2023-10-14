@@ -1,4 +1,6 @@
-
+from .collision import *
+from .point import *
+from .vector import *
 
 
 class Line:
@@ -15,40 +17,24 @@ class Line:
     def from_points(p0, p1):
         return Line(p0.x, p0.y, p1.x, p1.y)
 
+    def closest_point(self, point):
+        v = Vector.between(self.x0, self.y0, point.x, point.y)
+        d = Vector.between(self.x0, self.y0, self.x1, self.y1).normalized()
+        vs = v.project(d)
+        t = vs / math.hypot(self.x1 - self.x0, self.y1 - self.y0)
+        return Point(blmath.lerp(t, self.x0, self.x1), blmath.lerp(t, self.y0, self.y1))
 
+    def hit_segment(self, segment):
+        return segment_on_line(segment.x0, segment.y0, segment.x1, segment.y1, self.x0, self.y0, self.x1, self.y1)
 
+    def hit_line(self, segment):
+        return line_on_line(segment.x0, segment.y0, segment.x1, segment.y1, self.x0, self.y0, self.x1, self.y1)
 
+    def distance_to(self, point):
+        return self.closest_point(point).distance(point)
 
-
-# // HitSegment reports the point of intersection of a line and a line segment.
-# func (l *Line) HitSegment(s *Segment) (float64, float64, bool) {
-# 	return SegmentOnSegment(s.X0, s.Y0, s.X1, s.Y1, l.X0, l.Y0, l.X1, l.Y1)
-# }
-
-# // HitLine reports the point of intersection of two lines.
-# func (l *Line) HitLine(m *Line) (float64, float64, bool) {
-# 	return LineOnLine(l.X0, l.Y0, l.X1, l.Y1, m.X0, m.Y0, m.X1, m.Y1)
-# }
-
-# // ClosestPoint reports the point on a line closest to another given point.
-# func (l *Line) ClosestPoint(p *Point) *Point {
-
-# 	v := VectorBetween(l.X0, l.Y0, p.X, p.Y)
-# 	d := VectorBetween(l.X0, l.Y0, l.X1, l.Y1).Normalized()
-# 	vs := v.Project(d)
-# 	t := vs / math.Hypot(l.X1-l.X0, l.Y1-l.Y0)
-# 	return NewPoint(blmath.Lerp(t, l.X0, l.X1), blmath.Lerp(t, l.Y0, l.Y1))
-# }
-
-# // DistanceTo reports the distance from a given point to this line.
-# func (l *Line) DistanceTo(p *Point) float64 {
-# 	return l.ClosestPoint(p).Distance(p)
-# }
-
-# // Perpendicular returns a line that is perpendicular to the line and crosses through the given point.
-# func (l *Line) Perpendicular(p *Point) *Line {
-# 	dx := l.X1 - l.X0
-# 	dy := l.Y1 - l.Y0
-# 	return NewLine(p.X, p.Y, p.X-dy, p.Y+dx)
-# }
+    def perpendicular(self, point):
+        dx = self.x1 - self.x0
+        dy = self.y1 - self.y0
+        return Line(point.x, point.y, point.x - dy, point.y + dx)
 
