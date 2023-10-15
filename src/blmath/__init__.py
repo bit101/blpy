@@ -1,17 +1,17 @@
 import math
 
-def lerp(t, min, max):
-    return min + (max - min) * t
+def lerp(t, min_val, max_val):
+    return min_val + (max_val - min_val) * t
 
 def difference(a, b):
     return math.fabs(a - b)
 
-def norm(value, min, max):
-    return (value - min) / (max - min)
+def norm(value, min_val, max_val):
+    return (value - min_val) / (max_val - min_val)
 
 def map(srcValue, srcMin, srcMax, dstMin, dstMax):
-    n = nrom(srcValue, srcMin, srcMax)
-    return lerp(norm, dstMin, dstMax)
+    n = norm(srcValue, srcMin, srcMax)
+    return lerp(n, dstMin, dstMax)
 
 def mapLinExp(srcValue, srcMin, srcMax, dstMin, dstMax):
     if srcMin > srcMax:
@@ -31,20 +31,20 @@ def mapExpLin(srcValue, srcMin, srcMax, dstMin, dstMax):
         return math.nan
     return (math.log(srcValue / srcMin)) / (math.log(srcMax / srcMin)) * (dstMax - dstMin) + dstMin
 
-def wrap(value, min, max):
-    rng = max - min
-    return min + math.fmod((math.fmod(value - min, rng) + rng), rng)
+def wrap(value, min_val, max_val):
+    rng = max_val - min_val
+    return min_val + math.fmod((math.fmod(value - min_val, rng) + rng), rng)
 
 def wrap_angle(value):
     return wrap(value, 0, math.tau)
 
-def clamp(value, min, max):
-    if min > max:
-        min, max = max, min
-    if value < min:
-        return min
-    if value > max:
-        return max
+def clamp(value, min_val, max_val):
+    if min_val > max_val:
+        min_val, max_val = max_val, min_val
+    if value < min_val:
+        return min_val
+    if value > max_val:
+        return max_val
     return value
 
 def round_to(value, decimal):
@@ -53,14 +53,14 @@ def round_to(value, decimal):
 def round_to_nearest(value, mult):
     return round(value / mult) * mult
 
-def sin_range(angle, min, max):
-    return map(math.sin(angle), -1, 1, min, max)
+def sin_range(angle, min_val, max_val):
+    return map(math.sin(angle), -1, 1, min_val, max_val)
 
-def cos_range(angle, min, max):
-    return map(math.cos(angle), -1, 1, min, max)
+def cos_range(angle, min_val, max_val):
+    return map(math.cos(angle), -1, 1, min_val, max_val)
 
-def lerp_sin(value, min, max):
-	return sin_range(value * math.pi * 2 - math.pi / 2, min, max)
+def lerp_sin(value, min_val, max_val):
+	return sin_range(value * math.pi * 2 - math.pi / 2, min_val, max_val)
 
 def gamma(val, gamma):
     return math.pow(val, 1 / gamma)

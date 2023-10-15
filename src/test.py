@@ -5,25 +5,21 @@ import blmath
 import geom
 import random
 import color
-
+import noise
 
 surface = blpc.Surface(400, 400)
 context = blpc.Context(surface)
 context.set_line_width (0.5)
 
+scale = 0.02
+res = 1
 
-p = color.Palette()
-for i in range(10):
-    p.add(color.random_rgb())
-
-p.sort()
-
-for i in range(len(p.colors)):
-    c = p.colors[i]
-    print(c.luminance())
-    context.set_source_color(c)
-    context.fill_rectangle(i * 40, 0, 40, 400)
-
+for x in range(0, 400, res):
+    for y in range(0, 400, res):
+        v = noise.simplex2(x * scale, y * scale)
+        v = blmath.map(v, -1, 1, 0, 1)
+        context.set_source_gray(v)
+        context.fill_rectangle(x, y, res, res)
 
 
 
