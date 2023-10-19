@@ -13,7 +13,37 @@ class Point:
         self.y = y
 
     def __repr__(self):
-        return "geom.Point(x: {}, y: {})".format(self.x, self.y)
+        return f'geom.Point(x: {self.x!r}, y: {self.y!r})'
+
+    def __abs__(self):
+        return math.hypot(self.x, self.y)
+
+    def __add__(self, other):
+        return Point(self.x + other.x, self.y + other.y)
+
+    def __iadd__(self, other):
+        return Point(self.x + other.x, self.y + other.y)
+
+    def __sub__(self, other):
+        return Point(self.x - other.x, self.y - other.y)
+
+    def __isub__(self, other):
+        return Point(self.x - other.x, self.y - other.y)
+
+    def __mul__(self, scalar):
+        return Point(self.x * scalar, self.y * scalar)
+
+    def __imul__(self, scalar):
+        return Point(self.x * scalar, self.y * scalar)
+
+    def __truediv__(self, divisor):
+        return Point(self.x / divisor, self.y / divisor)
+
+    def __itruediv__(self, divisor):
+        return Point(self.x / divisor, self.y / divisor)
+
+    def __neg__(self):
+        return Point(-self.x, -self.y)
 
     def coords(self):
         return self.x, self.y

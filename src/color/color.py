@@ -12,6 +12,42 @@ class Color:
     def __repr__(self):
         return "color.Color(r: {}, g: {}, b: {}, a: {})".format(self.r, self.g, self.b, self.a)
 
+    def __mul__(self, scalar):
+        return self.scale(scalar)
+
+    def __imul__(self, scalar):
+        return self.scale(scalar)
+
+    def __truediv__(self, scalar):
+        return self.scale(1 / scalar)
+
+    def __itruediv__(self, scalar):
+        return self.scale(1 / scalar)
+
+    def __add__(self, other):
+        return self.add(other)
+
+    def __iadd__(self, other):
+        return self.add(other)
+
+    def __sub__(self, other):
+        return self.sub(other)
+
+    def __isub__(self, other):
+        return self.sub(other)
+
+    def add(self, other):
+        r = self.r + other.r
+        g = self.g + other.g
+        b = self.b + other.b
+        return rgb(min(r, 1), min(g, 1), min(b, 1))
+
+    def sub(self, other):
+        r = self.r - other.r
+        g = self.g - other.g
+        b = self.b - other.b
+        return rgb(max(r, 0), max(g, 0), max(b, 0))
+
     def diff(self, other):
         r = other.r - self.r
         g = other.g - self.g

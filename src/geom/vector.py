@@ -6,7 +6,16 @@ class Vector:
         self.v = v
 
     def __repr__(self):
-        return "geom.Vector(u: {}, v: {})".format(self.u, self.v)
+        return f'geom.Vector(u: {self.u!r}, v: {self.v!r})'
+
+    def __abs__(self):
+        return math.hypot(self.u, self.v)
+
+    def __add__(self, other):
+        return Vector(self.u + other.u, self.v + other.v)
+
+    def __mul__(self, scalar):
+        return Vector(self.u * scalar, self.v * scalar)
 
     @staticmethod
     def between(x0, y0, x1, y1):
@@ -22,19 +31,13 @@ class Vector:
     def cross_product(self, other):
         return self.u * other.v - self.v * other.u
 
-    def norm(self):
-        return math.hypot(self.u, self.v)
-
     def angle_to(self, other):
         dot = self.dot_product(other)
-        norm = self.norm() * w.norm()
+        norm = abs(self) * abs(other)
         return math.acos(dot / norm)
 
     def normalized(self):
-        return self.scaled(1 / self.norm())
-
-    def scaled(self, scale):
-        return Vector(self.u * scale, self.v * scale)
+        return self.scaled(1 / abs(self))
 
     def project(self, other):
         return self.dot_product(other.normalized())
