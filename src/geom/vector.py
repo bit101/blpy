@@ -14,8 +14,35 @@ class Vector:
     def __add__(self, other):
         return Vector(self.u + other.u, self.v + other.v)
 
+    def __iadd__(self, other):
+        return Vector(self.u + other.u, self.v + other.v)
+
+    def __sub__(self, other):
+        return Vector(self.u - other.u, self.v - other.v)
+
+    def __isub__(self, other):
+        return Vector(self.u - other.u, self.v - other.v)
+
     def __mul__(self, scalar):
         return Vector(self.u * scalar, self.v * scalar)
+
+    def __imul__(self, scalar):
+        return Vector(self.u * scalar, self.v * scalar)
+
+    def __rmul__(self, scalar):
+        return Vector(self.u * scalar, self.v * scalar)
+
+    def __truediv__(self, scalar):
+        return Vector(self.u / scalar, self.v / scalar)
+
+    def __itruediv__(self, scalar):
+        return Vector(self.u / scalar, self.v / scalar)
+
+    def __rtruediv__(self, scalar):
+        return Vector(self.u / scalar, self.v / scalar)
+
+    def __neg__(self):
+        return Vector(-self.u, -self.v)
 
     @staticmethod
     def between(x0, y0, x1, y1):

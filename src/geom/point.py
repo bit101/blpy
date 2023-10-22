@@ -36,10 +36,16 @@ class Point:
     def __imul__(self, scalar):
         return Point(self.x * scalar, self.y * scalar)
 
+    def __rmul__(self, scalar):
+        return Point(self.x * scalar, self.y * scalar)
+
     def __truediv__(self, divisor):
         return Point(self.x / divisor, self.y / divisor)
 
     def __itruediv__(self, divisor):
+        return Point(self.x / divisor, self.y / divisor)
+
+    def __rtruediv__(self, divisor):
         return Point(self.x / divisor, self.y / divisor)
 
     def __neg__(self):

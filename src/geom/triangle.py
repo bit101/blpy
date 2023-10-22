@@ -15,6 +15,28 @@ class Triangle:
         self.p1 = Point(x1, y1)
         self.p2 = Point(x2, y2)
 
+    def __repr__(self):
+        return f'geom.Triangle(({self.p0.x!r}, {self.p0.y!r}), ({self.p1.x!r}, {self.p1.y!r}), ({self.p2.x!r}, {self.p2.y!r}))'
+
+
+    def __mul__(self, scalar):
+        return Triangle(self.p0 * scalar, self.p1 * scalar, self.p2 * scalar)
+
+    def __imul__(self, scalar):
+        return Triangle(self.p0 * scalar, self.p1 * scalar, self.p2 * scalar)
+
+    def __rmul__(self, scalar):
+        return Triangle(self.p0 * scalar, self.p1 * scalar, self.p2 * scalar)
+
+    def __truediv__(self, divisor):
+        return Triangle(self.p0 / scalar, self.p1 / scalar, self.p2 / scalar)
+
+    def __itruediv__(self, divisor):
+        return Triangle(self.p0 / scalar, self.p1 / scalar, self.p2 / scalar)
+
+    def __rtruediv__(self, divisor):
+        return Triangle(self.p0 / scalar, self.p1 / scalar, self.p2 / scalar)
+
     @staticmethod
     def from_points(p0, p1, p2):
         t = Triangle(0, 0, 0, 0, 0, 0 )

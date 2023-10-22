@@ -11,6 +11,24 @@ class Circle:
     def __repr__(self):
         return "geom.Circle(x: {}, y: {}, radius: {})".format(self.x, self.y, self.radius)
 
+    def __mul__(self, scalar):
+        return Circle(self.x * scalar, self.y * scalar, self.radius * scalar)
+
+    def __imul__(self, scalar):
+        return Circle(self.x * scalar, self.y * scalar, self.radius * scalar)
+
+    def __rmul__(self, scalar):
+        return Circle(self.x * scalar, self.y * scalar, self.radius * scalar)
+
+    def __truediv__(self, scalar):
+        return Circle(self.x / scalar, self.y / scalar, self.radius / scalar)
+
+    def __itruediv__(self, scalar):
+        return Circle(self.x / scalar, self.y / scalar, self.radius / scalar)
+
+    def __rtruediv__(self, scalar):
+        return Circle(self.x / scalar, self.y / scalar, self.radius / scalar)
+
     @staticmethod
     def from_point(point, radius):
         return Circle(point.x, point.y, radius)

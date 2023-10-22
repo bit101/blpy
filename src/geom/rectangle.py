@@ -7,6 +7,24 @@ class Rectangle:
         self.w = w;
         self.h = h;
 
+    def __mul__(self, scalar):
+        return Rectangle(self.x * scalar, self.y * scalar, self.w * scalar, self.h * scalar)
+
+    def __imul__(self, scalar):
+        return Rectangle(self.x * scalar, self.y * scalar, self.w * scalar, self.h * scalar)
+
+    def __rmul__(self, scalar):
+        return Rectangle(self.x * scalar, self.y * scalar, self.w * scalar, self.h * scalar)
+
+    def __truediv__(self, divisor):
+        return Rectangle(self.x / divisor, self.y / divisor, self.w / scalar, self.h / scalar)
+
+    def __itruediv__(self, divisor):
+        return Rectangle(self.x / divisor, self.y / divisor, self.w / scalar, self.h / scalar)
+
+    def __rtruediv__(self, divisor):
+        return Rectangle(self.x / divisor, self.y / divisor, self.w / scalar, self.h / scalar)
+
     @staticmethod
     def from_points(p0, p1):
         x0 = p0.x

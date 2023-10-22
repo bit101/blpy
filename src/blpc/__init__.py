@@ -3,19 +3,8 @@ import color
 import geom
 import rand
 import math
+from blmath import frange, sign
 
-def frange(start, stop, inc = 1):
-    while start < stop:
-        yield start
-        start += inc
-
-def sign(value):
-    if value < 0:
-        return -1
-    if value > 0:
-        return 1
-    return 0
-    
 def Surface(width, height):
     return cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
 
